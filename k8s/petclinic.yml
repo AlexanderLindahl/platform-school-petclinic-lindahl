@@ -28,34 +28,12 @@ spec:
       labels:
         app: petclinic
     spec:
+      imagePullSecrets:
+        - name: ghcr-login-secret
       containers:
         - name: workload
-          image: dsyer/petclinic
-          env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: postgres
-            - name: SERVICE_BINDING_ROOT
-              value: /bindings
-            - name: SPRING_APPLICATION_JSON
-              value: |
-                {
-                  "management.endpoint.health.probes.add-additional-paths": true
-                }
-          ports:
-            - name: http
-              containerPort: 8080
-          livenessProbe:
-            httpGet:
-              path: /livez
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: http
-          volumeMounts:
-            - mountPath: /bindings/secret
-              name: binding
-              readOnly: true
+          image: ghcr.io/alexanderlindahl/platform-school-petclinic-lindahl:latest
+          imagePullPolicy: Always
       volumes:
         - name: binding
           projected:
